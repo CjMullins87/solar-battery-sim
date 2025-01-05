@@ -191,7 +191,6 @@ class SolarBatterySim:
         n_consecutive_days: int,
         batteries: List[Battery],
         profile: NetConsumptionProfile,
-        n_years: int = None,
         copy_objects: bool = True,
     ):
         """For a given NetConsumptionProfile and Battery system, run n_simulations
@@ -199,19 +198,21 @@ class SolarBatterySim:
         number of n_consecutive_days.
 
         Args:
-            label (str): _description_
-            n_simulations (int): _description_
-            n_consecutive_days (int): _description_
-            batteries (List[Battery]): _description_
-            profile (NetConsumptionProfile): _description_
-            n_years (int, optional): _description_. Defaults to None.
-            copy_objects: (bool): _description_
+            label (str): The label on the sim; these will become dictionary keys in a
+            multi-year simultation.
+            n_simulations (int): The total number of simulations to consider.
+            n_consecutive_days (int): The total number of consecutive days to consider.
+            batteries (List[Battery]): A list-like of Battery objects.
+            profile (NetConsumptionProfile): A NetConsumptionProfile.
+            copy_objects: (bool): Whether to use the objects directly or use
+            copies of them. NOTE: setting FALSE will directly modify Battery and
+            NetConsumptionProfile objects, changing their initial attributes. Defaults
+            to True.
         """
 
         self.label: str = label
         self.n_simulations: int = n_simulations
         self.n_days: int = n_consecutive_days
-        self.n_years: int = n_years
 
         # In the event the Profile and Batteries will be used in
         # other sims we want to protect against object overwrite
@@ -304,7 +305,8 @@ class SolarBatterySim:
             return_arrays (bool, optional): Whether each run of the simulation
             for a given year returns the associated array of all results.
             Defaults to False.
-            return_battery_capacity (bool, optional): Whether to return the
+            reset_sim (bool, optional): Whether, at the end of the sim, to reset
+            the simulation to the init point with original capacities. Defaults to True.
 
         Returns:
             dict(label, results): A dictionary with modified labels as keys
